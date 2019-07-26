@@ -3,7 +3,7 @@ import hashlib
 
 import base58
 
-from wallet import Hash
+from crypto import Hash
 
 
 class Protocol(object):
@@ -30,8 +30,8 @@ class Protocol(object):
     @staticmethod
     def program_hash_string_to_address(program_hash):
         address_verify_bytes = Protocol.gen_address_verify_bytes_from_program_hash(program_hash)
-        addressBaseData = binascii.unhexlify(Protocol.ADDRESS_GEN_PREFIX + program_hash)
-        return base58.b58encode(addressBaseData + address_verify_bytes).decode()
+        address_base_data = binascii.unhexlify(Protocol.ADDRESS_GEN_PREFIX + program_hash)
+        return base58.b58encode(address_base_data + address_verify_bytes).decode()
 
     @staticmethod
     def address_string_to_program_hash(address):

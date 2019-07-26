@@ -4,7 +4,7 @@ import nacl.signing
 import nacl.bindings
 from nacl.encoding import HexEncoder
 
-from wallet import Protocol
+from crypto import Protocol
 
 
 class Key(object):

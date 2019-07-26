@@ -1,6 +1,6 @@
 import nacl.utils
 
-from wallet import Hash
+from crypto import Hash
 from Crypto.Cipher import AES
 
 

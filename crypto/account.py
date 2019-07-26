@@ -1,4 +1,4 @@
-from wallet import Key, Protocol, Tools
+from crypto import Key, Protocol, Tools
 
 
 class Account(object):
