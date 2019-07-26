@@ -1,7 +1,8 @@
 import binascii
 import json
-from wallet import Config
-from wallet import Encryption, Hash, Account, Protocol
+from network import Api
+from crypto import Encryption, Account, Protocol
+from crypto import Hash
 
 
 def to_password_hash(password):
@@ -13,10 +14,11 @@ class Wallet(object):
     MIN_COMPATIBLE_WALLET_VERSION = 1
     MAX_COMPATIBLE_WALLET_VERSION = 1
 
-    _configure = Config
+    _api = Api()
 
     def __init__(self, account):
         self._account = account
+
 
     @property
     def public_key(self):
@@ -70,22 +72,42 @@ class Wallet(object):
 
     @property
     def configure(self):
-        return self._configure
+        return self._api.configure
 
     @configure.setter
     def configure(self, new_config):
-        self._configure.update(new_config)
+        self._api.configure.update(new_config)
 
-    # TODO
-    # def get_balance(self):
-    #     if self.address is None:
-    #         raise ValueError('Address not set')
-    #     query_address = self.address
-    #
-    #
-    # @classmethod
-    # def get_balance(cls, address):
-    #     pass
+    def get_balance(self):
+        """
+        query balance
+        :return:{float} amount
+        """
+        return float(self._api.get_balance_by_addr(self.address)['amount'])
+
+    @classmethod
+    def get_balance_by_addr(cls, address):
+        """
+        query balance
+        :param address:{string} nkn address
+        :return:{float} amount
+        """
+        return float(cls._api.get_balance_by_addr(address)['amount'])
+
+    def get_nonce(self):
+        return self._api.get_nonce_by_addr(self.address)['nonce']
+
+    @classmethod
+    def get_nonce_by_addr(cls, address):
+        return cls._api.get_nonce_by_addr(address)['nonce']
+
+    @classmethod
+    def get_address_by_name(cls, name):
+        return cls._api.get_address_by_name(name)
+
+    @classmethod
+    def get_block_count_by_name(cls, name):
+        return cls._api.get_block_count_by_name(name)
 
     def verify_wallet_password(self, password):
         password_hash = to_password_hash(password)
@@ -94,7 +116,7 @@ class Wallet(object):
     def to_dict(self):
         """
         generate a wallet in dict format
-        :return {dict}: wallet dict
+        :return:{dict} wallet dict
         """
         return {
             'Version': self._version,
@@ -110,14 +132,14 @@ class Wallet(object):
     def to_json(self):
         """
         generate a wallet in JSON format
-        :return {string}: wallet json
+        :return:{string} wallet json
         """
         return json.dumps(self.to_dict())
 
     def save_file(self, file):
         """
         generate a wallet and save file
-        :param file {string}: file path
+        :param file:{string} file path
         """
         with open(file, 'w') as f:
             json.dump(self.to_dict(), f)
@@ -126,8 +148,8 @@ class Wallet(object):
     def new_wallet(cls, password):
         """
         create a new wallet
-        :param password {string}: the password to encrypt wallet
-        :return {Wallet}: a NKN Wallet instance
+        :param password:{string} the password to encrypt wallet
+        :return:{Wallet} a NKN Wallet instance
         """
         account = Account()
         return cls.gen_wallet(account, password)
@@ -136,9 +158,9 @@ class Wallet(object):
     def restore_wallet_by_seed(cls, seed, password):
         """
         restore a wallet from seed
-        :param seed {string}: the seed for wallet restore
-        :param password {string}: password for new wallet
-        :return {Wallet}: a NKN Wallet instance
+        :param seed:{string} the seed for wallet restore
+        :param password:{string} password for new wallet
+        :return:{Wallet} a NKN Wallet instance
         """
         account = Account.restore_account(seed)
         return cls.gen_wallet(account, password)
@@ -147,9 +169,9 @@ class Wallet(object):
     def restore_wallet_from_json(cls, seed, password, prev_master_key, pre_iv):
         """
         restore a wallet from json
-        :param seed {string}: the seed for wallet restore
-        :param password {string}: password for wallet
-        :return {Wallet}: a NKN Wallet instance
+        :param seed:{string} the seed for wallet restore
+        :param password:{string} password for wallet
+        :return:{Wallet} a NKN Wallet instance
         """
         account = Account.restore_account(seed)
         return cls.gen_wallet(account, password, prev_master_key, pre_iv)
