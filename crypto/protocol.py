@@ -67,4 +67,4 @@ class Protocol(object):
 
     @staticmethod
     def signature_to_parameter(signature_hex):
-        return '40' + signature_hex
+        return format(int(len(signature_hex)/2), 'x') + signature_hex

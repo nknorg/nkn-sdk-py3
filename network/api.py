@@ -39,11 +39,8 @@ class Api(object):
         if res.status_code != 200:
             raise ValueError(res.status_code)
         res_data = res.json()
-        if 'error' in res_data:
-            return res_data['error']
-        if 'result' in res_data:
-            return res_data['result']
-        raise ValueError('Response format error')
+
+        return res_data.get('error') or res_data.get('result')
 
     def get_balance_by_addr(self, address):
         if address is None:
