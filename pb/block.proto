@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package pb;
+
+import "pb/transaction.proto";
+
+enum WinnerType {
+	GENESIS_SIGNER  = 0;
+	TXN_SIGNER      = 1;
+	BLOCK_SIGNER    = 2;
+}
+
+message UnsignedHeader {
+	uint32     version             = 1;
+	bytes      prev_block_hash     = 2;
+	bytes      transactions_root   = 3;
+	bytes      state_root          = 4;
+	int64      timestamp           = 5;
+	uint32     height              = 6;
+	bytes      random_beacon       = 7;
+	bytes      winner_hash         = 8;
+	WinnerType winner_type         = 9;
+	bytes      signer_pk           = 10;
+	bytes      signer_id           = 11;
+}
+
+message Header {
+	UnsignedHeader unsigned_header    = 1;
+	bytes          signature          = 2;
+}
+
+message Block {
+	Header header = 1;
+	repeated Transaction transactions = 2;
+}

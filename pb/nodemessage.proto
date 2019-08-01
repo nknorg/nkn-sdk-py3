@@ -1,0 +1,223 @@
+syntax = "proto3";
+
+package pb;
+
+import "pb/node.proto";
+import "pb/sigchain.proto";
+import "pb/block.proto";
+import "pb/transaction.proto";
+
+enum MessageType {
+  MESSAGE_TYPE_PLACEHOLDER_DO_NOT_USE = 0; // Placeholder, do not use or change
+  VOTE = 1;
+  I_HAVE_BLOCK_PROPOSAL = 2;
+  REQUEST_BLOCK_PROPOSAL = 3;
+  REQUEST_BLOCK_PROPOSAL_REPLY = 4;
+  GET_CONSENSUS_STATE = 5;
+  GET_CONSENSUS_STATE_REPLY = 6;
+  GET_BLOCK_HEADERS = 7;
+  GET_BLOCK_HEADERS_REPLY = 8;
+  GET_BLOCKS = 9;
+  GET_BLOCKS_REPLY = 10;
+  RELAY = 11;
+  TRANSACTIONS = 12;
+  BACKTRACK_SIGNATURE_CHAIN = 13;
+  REQUEST_PROPOSAL_TRANSACTIONS = 14;
+  REQUEST_PROPOSAL_TRANSACTIONS_REPLY = 15;
+  I_HAVE_SIGNATURE_CHAIN_TRANSACTION = 16;
+  REQUEST_SIGNATURE_CHAIN_TRANSACTION = 17;
+  REQUEST_SIGNATURE_CHAIN_TRANSACTION_REPLY = 18;
+}
+
+// Message type that can be signed message
+// Name doesn't matter, but value nees to match the value in MessageType
+enum AllowedSignedMessageType {
+  ALLOW_SIGNED_PLACEHOLDER_DO_NOT_USE = 0; // Placeholder, do not use or change
+}
+
+// Message type that can be unsigned message
+// Name doesn't matter, but value nees to match the value in MessageType
+enum AllowedUnsignedMessageType {
+  ALLOW_UNSIGNED_PLACEHOLDER_DO_NOT_USE = 0; // Placeholder, do not use or change
+  ALLOW_UNSIGNED_VOTE = 1;
+  ALLOW_UNSIGNED_I_HAVE_BLOCK_PROPOSAL = 2;
+  ALLOW_UNSIGNED_REQUEST_BLOCK_PROPOSAL = 3;
+  ALLOW_UNSIGNED_REQUEST_BLOCK_REPLY = 4;
+  ALLOW_UNSIGNED_GET_CONSENSUS_STATE = 5;
+  ALLOW_UNSIGNED_GET_CONSENSUS_STATE_REPLY = 6;
+  ALLOW_UNSIGNED_GET_BLOCK_HEADERS = 7;
+  ALLOW_UNSIGNED_GET_BLOCK_HEADERS_REPLY = 8;
+  ALLOW_UNSIGNED_GET_BLOCKS = 9;
+  ALLOW_UNSIGNED_GET_BLOCKS_REPLY = 10;
+  ALLOW_UNSIGNED_RELAY = 11;
+  ALLOW_UNSIGNED_TRANSACTIONS = 12;
+  ALLOW_UNSIGNED_BACKTRACK_SIGNATURE_CHAIN = 13;
+  ALLOW_UNSIGNED_REQUEST_PROPOSAL_TRANSACTIONS = 14;
+  ALLOW_UNSIGNED_REQUEST_PROPOSAL_TRANSACTIONS_REPLY = 15;
+  ALLOW_UNSIGNED_I_HAVE_SIGNATURE_CHAIN_TRANSACTION = 16;
+  ALLOW_UNSIGNED_REQUEST_SIGNATURE_CHAIN_TRANSACTION = 17;
+  ALLOW_UNSIGNED_REQUEST_SIGNATURE_CHAIN_TRANSACTION_REPLY = 18;
+}
+
+// Message type that can be sent as direct message
+// Name doesn't matter, but value nees to match the value in MessageType
+enum AllowedDirectMessageType {
+  ALLOW_DIRECT_PLACEHOLDER_DO_NOT_USE = 0; // Placeholder, do not use or change
+  ALLOW_DIRECT_VOTE = 1;
+  ALLOW_DIRECT_I_HAVE_BLOCK_PROPOSAL = 2;
+  ALLOW_DIRECT_REQUEST_BLOCK_PROPOSAL = 3;
+  ALLOW_DIRECT_REQUEST_BLOCK_REPLY = 4;
+  ALLOW_DIRECT_GET_CONSENSUS_STATE = 5;
+  ALLOW_DIRECT_GET_CONSENSUS_STATE_REPLY = 6;
+  ALLOW_DIRECT_GET_BLOCK_HEADERS = 7;
+  ALLOW_DIRECT_GET_BLOCK_HEADERS_REPLY = 8;
+  ALLOW_DIRECT_GET_BLOCKS = 9;
+  ALLOW_DIRECT_GET_BLOCKS_REPLY = 10;
+  ALLOW_DIRECT_BACKTRACK_SIGNATURE_CHAIN = 13;
+  ALLOW_DIRECT_REQUEST_PROPOSAL_TRANSACTIONS = 14;
+  ALLOW_DIRECT_REQUEST_PROPOSAL_TRANSACTIONS_REPLY = 15;
+  ALLOW_DIRECT_I_HAVE_SIGNATURE_CHAIN_TRANSACTION = 16;
+  ALLOW_DIRECT_REQUEST_SIGNATURE_CHAIN_TRANSACTION = 17;
+  ALLOW_DIRECT_REQUEST_SIGNATURE_CHAIN_TRANSACTION_REPLY = 18;
+}
+
+// Message type that can be sent as relay message
+// Name doesn't matter, but value nees to match the value in MessageType
+enum AllowedRelayMessageType {
+  ALLOW_RELAY_PLACEHOLDER_DO_NOT_USE = 0; // Placeholder, do not use or change
+  ALLOW_RELAY_RELAY = 11;
+}
+
+// Message type that can be sent as broadcast_push message
+// Name doesn't matter, but value nees to match the value in MessageType
+enum AllowedBroadcastPushMessageType {
+  ALLOW_BROADCAST_PUSH_PLACEHOLDER_DO_NOT_USE = 0; // Placeholder, do not use or change
+  ALLOW_BROADCAST_PUSH_TRANSACTIONS = 12;
+}
+
+// Message type that can be sent as broadcast_pull message
+// Name doesn't matter, but value nees to match the value in MessageType
+enum AllowedBroadcastPullMessageType {
+  ALLOW_BROADCAST_PULL_PLACEHOLDER_DO_NOT_USE = 0; // Placeholder, do not use or change
+}
+
+// Message type that can be sent as broadcast_tree message
+// Name doesn't matter, but value nees to match the value in MessageType
+enum AllowedBroadcastTreeMessageType {
+  ALLOW_BROADCAST_TREE_PLACEHOLDER_DO_NOT_USE = 0; // Placeholder, do not use or change
+  ALLOW_BROADCAST_TREE_TRANSACTIONS = 12;
+}
+
+message UnsignedMessage {
+  MessageType message_type = 1;
+  bytes message = 2;
+}
+
+message SignedMessage {
+  bytes message = 1;
+  bytes signature = 2;
+}
+
+message Vote {
+  uint32 height = 1;
+  bytes block_hash = 2;
+}
+
+message IHaveBlockProposal {
+  uint32 height = 1;
+  bytes block_hash = 2;
+}
+
+enum RequestTransactionType {
+  REQUEST_FULL_TRANSACTION = 0;
+  REQUEST_TRANSACTION_HASH = 1;
+  REQUEST_TRANSACTION_SHORT_HASH = 2;
+}
+
+message RequestBlockProposal {
+  bytes block_hash = 1;
+  RequestTransactionType type = 2;
+  bytes short_hash_salt = 3;
+  uint32 short_hash_size = 4;
+}
+
+message RequestBlockProposalReply {
+  Block block = 1;
+  repeated bytes transactions_hash = 2;
+}
+
+message RequestProposalTransactions {
+  bytes block_hash = 1;
+  RequestTransactionType type = 2;
+  bytes short_hash_salt = 3;
+  uint32 short_hash_size = 4;
+  repeated bytes transactions_hash = 5;
+}
+
+message RequestProposalTransactionsReply {
+  repeated Transaction transactions = 1;
+}
+
+message GetConsensusState {
+}
+
+message GetConsensusStateReply {
+  bytes ledger_block_hash = 2;
+  uint32 ledger_height = 1;
+  uint32 consensus_height = 3;
+  uint32 min_verifiable_height = 5;
+  SyncState sync_state = 4;
+}
+
+message GetBlockHeaders {
+  uint32 start_height = 1;
+  uint32 end_height = 2;
+}
+
+message GetBlockHeadersReply {
+  repeated Header block_headers = 1;
+}
+
+message GetBlocks {
+  uint32 start_height = 1;
+  uint32 end_height = 2;
+}
+
+message GetBlocksReply {
+  repeated Block blocks = 1;
+}
+
+message Relay {
+  string src_identifier = 1;
+  bytes src_pubkey = 6;
+  bytes dest_id = 2;
+  bytes payload = 3;
+  uint32 max_holding_seconds = 5;
+  // It is important to use block hash instead of block height here to allow
+  // node in syncing state to be able to sign the sigchain elem.
+  bytes block_hash = 7;
+  bytes last_signature = 8;
+  uint32 sig_chain_len = 9;
+}
+
+message Transactions {
+  repeated Transaction transactions = 1;
+}
+
+message BacktrackSignatureChain {
+  repeated SigChainElem sig_chain_elems = 1;
+  bytes prev_signature = 2;
+}
+
+message IHaveSignatureChainTransaction {
+  uint32 height = 1;
+  bytes signature_hash = 2;
+}
+
+message RequestSignatureChainTransaction {
+  bytes signature_hash = 1;
+}
+
+message RequestSignatureChainTransactionReply {
+  Transaction transaction = 1;
+}

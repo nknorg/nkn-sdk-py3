@@ -8,5 +8,5 @@ setup(
     author_email='peng.liu@nkn.org',
     url='',
     packages=[],
-    install_requires=['pynacl', 'pycrypto', 'base58', 'requests']
+    install_requires=['pynacl', 'pycrypto', 'base58', 'requests', 'protobuf']
 )

@@ -9,6 +9,10 @@ class Account(object):
         self._contract = self.gen_account_contract_string(self._key.signature_redeem, self._key.program_hash)
 
     @property
+    def key(self):
+        return self._key
+
+    @property
     def address(self):
         return self._address
 

@@ -1,4 +1,9 @@
+import nacl.utils
+from serialize import Serialize
+
+
 class Tools(object):
+    @staticmethod
     def prefix_byte_count_to_hex_string(hex_str):
         length = len(hex_str)
         if length == 0:
@@ -11,3 +16,7 @@ class Tools(object):
             byte_count = '0' + byte_count
 
         return byte_count + hex_str
+
+    @staticmethod
+    def random_uint64():
+        return int(nacl.utils.random(Serialize.maxUintBits / 8).hex(), 16)

@@ -1,8 +1,11 @@
 import binascii
 import json
+
+from error import WalletError
 from network import Api
-from crypto import Encryption, Account, Protocol
+from crypto import Encryption, Account, Protocol, Tools
 from crypto import Hash
+from transaction import Payload, Transaction
 
 
 def to_password_hash(password):
@@ -18,7 +21,6 @@ class Wallet(object):
 
     def __init__(self, account):
         self._account = account
-
 
     @property
     def public_key(self):
@@ -84,6 +86,68 @@ class Wallet(object):
         :return:{float} amount
         """
         return float(self._api.get_balance_by_addr(self.address)['amount'])
+
+    def transfer_to(self, to_address, amount):
+        """
+        transfer nkn to some valid address
+        :param to_address:{string} valid nkn address
+        :param amount:{float} value for transfer
+        :return {string}: hash
+        """
+        if not Protocol.verify_address(to_address):
+            raise WalletError.INVALID_ADDRESS()
+        balance = self.get_balance()
+        if balance < amount:
+            raise WalletError.NOT_ENOUGH_NKN_COIN()
+        nonce = self.get_nonce()
+        pld = Payload.new_transfer(self.program_hash, Protocol.address_string_to_program_hash(to_address), amount)
+        txn = Transaction.new_transaction(self._account, pld, nonce)
+
+        return self._api.send_raw_transaction(txn.SerializeToString().hex())
+
+    def register_name(self, name):
+        """
+        register name on nkn for current wallet
+        :param name {string}: name to register
+        :return:
+        """
+        nonce = self.get_nonce()
+        pld = Payload.new_register_name(self.public_key, name)
+        txn = Transaction.new_transaction(self._account, pld, nonce)
+
+        return self._api.send_raw_transaction(txn.SerializeToString().hex())
+
+    def subscribe(self, topic, bucket, duration, identifier='', meta=''):
+        """
+        subscribe to topic on nkn for current wallet
+        :param topic {string}: topic to subscribe to
+        :param bucket {int}: bucket of topic to subscribe to
+        :param duration {int}: subscription duration
+        :param identifier {string}: optional identifier
+        :param meta {string}: optional meta data
+        :return:
+        """
+        nonce = self.get_nonce()
+        pld = Payload.new_subscribe(self.public_key, identifier, topic, bucket, duration, meta)
+        txn = Transaction.new_transaction(self._account, pld, nonce)
+
+        return self._api.send_raw_transaction(txn.SerializeToString().hex())
+
+    def create_or_update_nano_pay(self, to_address, amount, expiration, id):
+        if not Protocol.verify_address(to_address):
+            raise WalletError.INVALID_ADDRESS()
+        balance = self.get_balance()
+        if balance < amount:
+            raise WalletError.NOT_ENOUGH_NKN_COIN()
+        if id is None:
+            id = Tools.random_uint64()
+        pld = Payload.new_nano_pay(self._program_hash, Protocol.address_string_to_program_hash(to_address), id, amount,
+                                   expiration, expiration)
+        txn = Transaction.new_transaction(self._account, pld)
+        return txn
+
+    def send_transaction(self, txn):
+        return self._api.send_raw_transaction(txn.SerializeToString().hex())
 
     @classmethod
     def get_balance_by_addr(cls, address):

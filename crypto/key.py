@@ -14,9 +14,9 @@ class Key(object):
         else:
             seed = HexEncoder.decode(seed)
         public_key, secret_key = nacl.bindings.crypto_sign_seed_keypair(seed)
-        self._public_key = HexEncoder.encode(public_key).decode('utf-8')
-        self._private_key = HexEncoder.encode(secret_key).decode('utf-8')
-        self._seed = HexEncoder.encode(seed).decode('utf-8')
+        self._public_key = HexEncoder.encode(public_key).decode()
+        self._private_key = HexEncoder.encode(secret_key).decode()
+        self._seed = HexEncoder.encode(seed).decode()
         self._signature_redeem = Protocol.public_key_to_signature_redeem(self._public_key)
         self._program_hash = Protocol.hex_string_to_program_hash(self._signature_redeem)
 
@@ -40,3 +40,6 @@ class Key(object):
     def program_hash(self):
         return self._program_hash
 
+    def sign(self, message):
+        sig = nacl.bindings.crypto_sign(message, HexEncoder.decode(self._private_key))
+        return sig[:64]  # length > 64, so cut 64

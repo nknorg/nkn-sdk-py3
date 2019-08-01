@@ -64,3 +64,7 @@ class Protocol(object):
         address_verify_code = Protocol.get_address_string_verify_code(address)
         program_hash_verify_code = Protocol.gen_address_verify_code_from_program_hash(program_hash)
         return address_verify_code == program_hash_verify_code
+
+    @staticmethod
+    def signature_to_parameter(signature_hex):
+        return '40' + signature_hex

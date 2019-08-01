@@ -35,8 +35,13 @@ class Api(object):
             data.update({'id': call_id})
 
         res = requests.post(self._configure['RPC_ADDR'], json=data, timeout=timeout or self._timeout)
+
+        if res.status_code != 200:
+            raise ValueError(res.status_code)
         res_data = res.json()
-        if res_data['result'] is not None:
+        if 'error' in res_data:
+            return res_data['error']
+        if 'result' in res_data:
             return res_data['result']
         raise ValueError('Response format error')
 

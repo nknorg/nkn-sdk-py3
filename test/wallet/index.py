@@ -3,7 +3,7 @@ from wallet import Wallet
 
 wallet = Wallet.new_wallet('pswd')
 print(wallet.to_json())
-
+print(wallet.address)
 wallet_from_json = Wallet.load_json_wallet(wallet.to_json(), 'pswd')
 print(wallet_from_json.to_dict())
 
@@ -20,3 +20,4 @@ print(Wallet.get_nonce_by_addr(wallet.address))
 
 print(Wallet.get_address_by_name('google'))
 print(Wallet.get_block_count_by_name('google'))
+
