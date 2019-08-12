@@ -87,7 +87,7 @@ class Wallet(object):
         """
         return float(self._api.get_balance_by_addr(self.address)['amount'])
 
-    def transfer_to(self, to_address, amount):
+    def transfer_to(self, to_address, amount, **options):
         """
         transfer nkn to some valid address
         :param to_address:{string} valid nkn address
@@ -101,11 +101,12 @@ class Wallet(object):
             raise WalletError.NOT_ENOUGH_NKN_COIN()
         nonce = self.get_nonce()
         pld = Payload.new_transfer(self.program_hash, Protocol.address_string_to_program_hash(to_address), amount)
-        txn = Transaction.new_transaction(self._account, pld, nonce)
+        txn = Transaction.new_transaction(self._account, pld, nonce, options.get('fee') or 0,
+                                          options.get('attrs') or '')
 
         return self._api.send_raw_transaction(txn.SerializeToString().hex())
 
-    def register_name(self, name):
+    def register_name(self, name, **options):
         """
         register name on nkn for current wallet
         :param name {string}: name to register
@@ -113,11 +114,12 @@ class Wallet(object):
         """
         nonce = self.get_nonce()
         pld = Payload.new_register_name(self.public_key, name)
-        txn = Transaction.new_transaction(self._account, pld, nonce)
+        txn = Transaction.new_transaction(self._account, pld, nonce, options.get('fee') or 0,
+                                          options.get('attrs') or '')
 
         return self._api.send_raw_transaction(txn.SerializeToString().hex())
 
-    def subscribe(self, topic, bucket, duration, identifier='', meta=''):
+    def subscribe(self, topic, bucket, duration, identifier='', meta='', **options):
         """
         subscribe to topic on nkn for current wallet
         :param topic {string}: topic to subscribe to
@@ -129,7 +131,8 @@ class Wallet(object):
         """
         nonce = self.get_nonce()
         pld = Payload.new_subscribe(self.public_key, identifier, topic, bucket, duration, meta)
-        txn = Transaction.new_transaction(self._account, pld, nonce)
+        txn = Transaction.new_transaction(self._account, pld, nonce, options.get('fee') or 0,
+                                          options.get('attrs') or '')
 
         return self._api.send_raw_transaction(txn.SerializeToString().hex())
 
