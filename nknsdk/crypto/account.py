@@ -1,4 +1,4 @@
-from crypto import Key, Protocol, Tools
+from . import Key, Protocol, Tools
 
 
 class Account(object):

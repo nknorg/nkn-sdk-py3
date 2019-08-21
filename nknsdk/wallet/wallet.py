@@ -1,11 +1,11 @@
 import binascii
 import json
 
-from error import WalletError
-from network import Api
-from crypto import Encryption, Account, Protocol, Tools
-from crypto import Hash
-from transaction import Payload, Transaction
+from nknsdk.error import WalletError
+from nknsdk.network import Api
+from nknsdk.crypto import Encryption, Account, Protocol, Tools
+from nknsdk.crypto import Hash
+from nknsdk.transaction import Payload, Transaction
 
 
 def to_password_hash(password):

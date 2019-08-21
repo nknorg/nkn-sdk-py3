@@ -1,4 +1,4 @@
-from wallet import Wallet
+from nknsdk.wallet import Wallet
 
 # Create a new wallet
 wallet = Wallet.new_wallet('pswd')

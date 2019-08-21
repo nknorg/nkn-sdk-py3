@@ -1,5 +1,6 @@
 import nacl.utils
-from serialize import Serialize
+
+from nknsdk.serialize import Serialize
 
 
 class Tools(object):

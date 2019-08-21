@@ -1,8 +1,8 @@
 import binascii
 
-from config import Config
-from serialize import Serialize
-from pb.transaction_pb2 import TransferAsset, Payload as PbPayload, PayloadType, RegisterName, DeleteName, Subscribe, NanoPay
+from nknsdk.config import Config
+from nknsdk.serialize import Serialize
+from nknsdk.pb.transaction_pb2 import TransferAsset, Payload as PbPayload, PayloadType, RegisterName, DeleteName, Subscribe, NanoPay
 
 
 class Payload(object):

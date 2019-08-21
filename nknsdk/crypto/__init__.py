@@ -5,4 +5,4 @@ from .protocol import Protocol
 from .key import Key
 from .account import Account
 
-__all__ = [Hash, Tools, Encryption, Protocol, Key, Account]
+__all__ = ['Hash', 'Tools', 'Encryption', 'Protocol', 'Key', 'Account']

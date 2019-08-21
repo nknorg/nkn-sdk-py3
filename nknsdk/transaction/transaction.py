@@ -1,9 +1,10 @@
 import binascii
-from config import Config
-from crypto import Hash, Protocol
-from transaction import Payload
-from serialize import Serialize
-from pb.transaction_pb2 import UnsignedTx, Transaction as PbTransaction, Program, Payload as PbPayload
+
+from nknsdk.config import Config
+from nknsdk.crypto import Hash, Protocol
+from nknsdk.transaction import Payload
+from nknsdk.serialize import Serialize
+from nknsdk.pb.transaction_pb2 import UnsignedTx, Transaction as PbTransaction, Program, Payload as PbPayload
 
 
 class Transaction(object):

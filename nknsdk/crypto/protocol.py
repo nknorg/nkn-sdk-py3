@@ -1,9 +1,8 @@
 import binascii
 import hashlib
-
 import base58
 
-from crypto import Hash
+from . import Hash
 
 
 class Protocol(object):

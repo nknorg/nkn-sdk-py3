@@ -1,7 +1,7 @@
 import nacl.utils
-
-from crypto import Hash
 from Crypto.Cipher import AES
+
+from . import Hash
 
 
 class Encryption(object):

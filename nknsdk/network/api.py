@@ -1,7 +1,7 @@
 import json
-
-from config import Config
 import requests
+
+from nknsdk.config import Config
 
 
 class Api(object):
