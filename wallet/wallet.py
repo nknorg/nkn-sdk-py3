@@ -101,8 +101,7 @@ class Wallet(object):
             raise WalletError.NOT_ENOUGH_NKN_COIN()
         nonce = self.get_nonce()
         pld = Payload.new_transfer(self.program_hash, Protocol.address_string_to_program_hash(to_address), amount)
-        txn = Transaction.new_transaction(self._account, pld, nonce, options.get('fee') or 0,
-                                          options.get('attrs') or '')
+        txn = Transaction.new_transaction(self._account, pld, nonce, options.get('fee', 0), options.get('attrs', ''))
 
         return self._api.send_raw_transaction(txn.SerializeToString().hex())
 
@@ -114,8 +113,8 @@ class Wallet(object):
         """
         nonce = self.get_nonce()
         pld = Payload.new_register_name(self.public_key, name)
-        txn = Transaction.new_transaction(self._account, pld, nonce, options.get('fee') or 0,
-                                          options.get('attrs') or '')
+        txn = Transaction.new_transaction(self._account, pld, nonce, options.get('fee', 0),
+                                          options.get('attrs', ''))
 
         return self._api.send_raw_transaction(txn.SerializeToString().hex())
 
@@ -131,8 +130,7 @@ class Wallet(object):
         """
         nonce = self.get_nonce()
         pld = Payload.new_subscribe(self.public_key, identifier, topic, bucket, duration, meta)
-        txn = Transaction.new_transaction(self._account, pld, nonce, options.get('fee') or 0,
-                                          options.get('attrs') or '')
+        txn = Transaction.new_transaction(self._account, pld, nonce, options.get('fee', 0), options.get('attrs', 0))
 
         return self._api.send_raw_transaction(txn.SerializeToString().hex())
 
