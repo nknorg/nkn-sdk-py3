@@ -30,7 +30,10 @@ class Protocol(object):
     def program_hash_string_to_address(program_hash):
         address_verify_bytes = Protocol.gen_address_verify_bytes_from_program_hash(program_hash)
         address_base_data = binascii.unhexlify(Protocol.ADDRESS_GEN_PREFIX + program_hash)
-        return base58.b58encode(address_base_data + address_verify_bytes).decode()
+        address = base58.b58encode(address_base_data + address_verify_bytes)
+        if isinstance(address, (bytes, bytearray)):
+            return address.decode()
+        return address
 
     @staticmethod
     def address_string_to_program_hash(address):

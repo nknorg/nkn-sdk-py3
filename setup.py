@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='nkn-sdk',
-    version='0.1.0',
+    version='0.1.1',
     author='heron',
     author_email='peng.liu@nkn.org',
     description='NKN client and wallet SDK',
