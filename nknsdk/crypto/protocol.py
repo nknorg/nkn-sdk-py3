@@ -1,8 +1,9 @@
 import binascii
 import hashlib
+
 import base58
 
-from . import Hash
+from nknsdk.crypto.hash import Hash
 
 
 class Protocol(object):
@@ -69,4 +70,10 @@ class Protocol(object):
 
     @staticmethod
     def signature_to_parameter(signature_hex):
-        return format(int(len(signature_hex)/2), 'x') + signature_hex
+        return format(int(len(signature_hex) / 2), 'x') + signature_hex
+
+    @staticmethod
+    def public_key_to_address(public_key):
+        signature_redeem = Protocol.public_key_to_signature_redeem(public_key)
+        program_hash = Protocol.hex_string_to_program_hash(signature_redeem)
+        return Protocol.program_hash_string_to_address(program_hash)
